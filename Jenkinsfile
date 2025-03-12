@@ -21,42 +21,11 @@ pipeline {
             }
         }
 
-        stage('Run Automation Testing') {
+         stage('Trigger Job Lain dengan Parameter') {
             steps {
-                dir('automation') {
-                    script {
-                        echo "Running Automation Tests..."
-                        sh """
-                            chmod +x ./gradlew
-                            ./gradlew clean test
-
-                            chmod +x ./runner.sh  # Pastikan file bisa dieksekusi
-                            ./runner.sh "@smoke"  # Jalankan script dengan parameter TAG
-                        """
-                    }
-                }
-            }
-        }
-
-        stage('Generate Allure Report') {
-            steps {
-                dir('automation') {
-                    script {
-                        def allureResults = "allure-results"
-                        def allureReport = "allure-report"
-                        echo "Generating Allure Report..."
-                        sh "allure generate ${allureResults} -o ${allureReport} --clean"
-                    }
-                }
-            }
-        }
-
-        stage('Publish Allure Report') {
-            steps {
-                allure([
-                    results: [[path: 'automation/allure-results']],
-                    reportBuildPolicy: 'ALWAYS'
-                ])
+                build job: 'Automation Testing', parameters: [
+                    string(name: 'TAG', value: '@smoke')
+                ]
             }
         }
 
