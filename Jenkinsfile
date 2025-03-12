@@ -29,28 +29,6 @@ pipeline {
             }
         }
 
-        stage('Generate Allure Report') {
-            steps {
-                dir('automation') {
-                    script {
-                        def allureResults = "allure-results"
-                        def allureReport = "allure-report"
-                        echo "Generating Allure Report..."
-                        sh "allure generate ${allureResults} -o ${allureReport} --clean"
-                    }
-                }
-            }
-        }
-
-        stage('Publish Allure Report') {
-            steps {
-                allure([
-                    results: [[path: 'automation/allure-results']],
-                    reportBuildPolicy: 'ALWAYS'
-                ])
-            }
-        }
-
         stage('Deploy to Nginx') {
             when {
                 expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
