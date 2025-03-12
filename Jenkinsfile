@@ -24,8 +24,9 @@ pipeline {
          stage('Trigger Job Lain dengan Parameter') {
             steps {
                 build job: 'Automation Testing', parameters: [
-                    string(name: 'TAG', value: '@smoke'), wait: false
-                ]
+                    string(name: 'TAG', value: '@smoke')
+                ],
+                wait: false
             }
         }
 
