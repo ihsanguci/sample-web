@@ -21,20 +21,11 @@ pipeline {
             }
         }
 
-        stage('Run Automation Testing') {
+         stage('Trigger Job Lain dengan Parameter') {
             steps {
-                dir('automation') {
-                    script {
-                        echo "Running Automation Tests..."
-                        sh """
-                            chmod +x ./gradlew
-                            ./gradlew clean test
-
-                            chmod +x ./runner.sh  # Pastikan file bisa dieksekusi
-                            ./runner.sh "@smoke"  # Jalankan script dengan parameter TAG
-                        """
-                    }
-                }
+                build job: 'Automation Testing', parameters: [
+                    string(name: 'TAG', value: '@smoke')
+                ]
             }
         }
 
