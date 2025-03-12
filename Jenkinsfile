@@ -42,8 +42,10 @@ pipeline {
             steps {
                 dir('automation') {
                     script {
+                        def allureResults = "allure-results"
+                        def allureReport = "allure-report"
                         echo "Generating Allure Report..."
-                        sh "allure generate ${ALLURE_RESULTS} -o ${ALLURE_REPORT} --clean"
+                        sh "allure generate ${allureResults} -o ${allureReport} --clean"
                     }
                 }
             }
@@ -77,7 +79,7 @@ pipeline {
         failure {
             echo "Tests failed. Deployment stopped!"
         }
-         always {
+        always {
             archiveArtifacts artifacts: 'automation/allure-report/**', fingerprint: true
         }
     }
