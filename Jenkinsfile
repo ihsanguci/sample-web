@@ -38,6 +38,26 @@ pipeline {
             }
         }
 
+        stage('Generate Allure Report') {
+            steps {
+                dir('automation') {
+                    script {
+                        echo "Generating Allure Report..."
+                        sh "allure generate ${ALLURE_RESULTS} -o ${ALLURE_REPORT} --clean"
+                    }
+                }
+            }
+        }
+
+        stage('Publish Allure Report') {
+            steps {
+                allure([
+                    results: [[path: 'automation/allure-results']],
+                    reportBuildPolicy: 'ALWAYS'
+                ])
+            }
+        }
+
         stage('Deploy to Nginx') {
             when {
                 expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
@@ -56,6 +76,9 @@ pipeline {
     post {
         failure {
             echo "Tests failed. Deployment stopped!"
+        }
+         always {
+            archiveArtifacts artifacts: 'automation/allure-report/**', fingerprint: true
         }
     }
 }
