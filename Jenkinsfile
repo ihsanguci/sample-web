@@ -49,8 +49,5 @@ pipeline {
         failure {
             echo "Tests failed. Deployment stopped!"
         }
-        always {
-            archiveArtifacts artifacts: 'automation/allure-report/**', fingerprint: true
-        }
     }
 }
